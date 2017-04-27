@@ -1,0 +1,22 @@
+{
+  "name": "image-search",
+  "version": "1.0.0",
+  "description": "Search images, recall last searches, paginate stuff",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mnuman/fcc-image-search.git"
+  },
+  "author": "Milco Numan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mnuman/fcc-image-search/issues"
+  },
+  "homepage": "https://github.com/mnuman/fcc-image-search#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
