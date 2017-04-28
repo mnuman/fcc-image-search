@@ -9,7 +9,13 @@ module.exports = function(app, db) {
 
   app.get('/api/latest/imagesearch', (req, res) => {
     console.log('Handle stuff related to retrieving the last 10 results here ...');
-    res.send('Retrieved previous queries for you');
+    // project query to only retrieve term & when, reverse sorted by date, limited to 10 results and
+    // push the result set back as the answer.
+      db.collection('searches').find({}, { _id:0, term:1, when:1}).sort({ when: -1 }).limit(10).toArray( (err,searches) => {
+        if (err) throw err;
+        res.setHeader('Content-Type', 'application/json');  // barf back JSON to client
+        res.send(JSON.stringify(searches));
+    });
   });
 
   app.get('/api/imagesearch/:keywords(*)', (req, res) => {
