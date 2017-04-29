@@ -1,5 +1,8 @@
 'use strict';
 var path = require('path');
+var request = require('request');
+const bingBaseUrl = 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q=';
+
 module.exports = function(app, db) {
   // handle the non-query to show how to use this API
   app.get('/', (req, res) => {
@@ -23,6 +26,13 @@ module.exports = function(app, db) {
     // req.query.<param_name> contains the parameters, if any.
     console.log('Handle stuff related to executing the actual query here ...');
 
+    var requestOptions = {
+      url : bingBaseUrl + req.params.keywords + '&count=10' + ( (req.query.offset) ? '&offset=' + req.query.offset : ''),
+      headers : {
+        "Ocp-Apim-Subscription-Key" : process.env.BING_API_KEY
+      }
+    };
+
     var searches = db.collection('searches');
     var currentSearch = {
       term: req.params.keywords,
@@ -31,8 +41,24 @@ module.exports = function(app, db) {
 
     searches.insert(currentSearch, (err, data) => {
       if (err) throw err;
-      console.log('Just wrote document into MongoDB: ' + JSON.stringify(currentSearch));
+      // console.log('Just wrote document into MongoDB: ' + JSON.stringify(currentSearch));
     });
-    res.send('Executed some daft image search for ya!');
+
+    // now perform the actual request to Bing
+    request(requestOptions, (error, response, body) => {
+      if (error) throw error;
+      var bingResponse = JSON.parse(body);
+      var responseObject = {
+        pageUrl : bingResponse.webSearchUrl,
+        images : []
+      };
+      for (var i = 0; i < bingResponse.value.length; i++){
+        responseObject.images.push({ altText : bingResponse.value[i].name,
+          imageUrl: bingResponse.value[i].contentUrl
+        });
+      }
+      // console.log('Sending back response:' + JSON.stringify(responseObject));
+      res.send(responseObject);
+    });
   });
 };

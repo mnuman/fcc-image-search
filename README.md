@@ -33,3 +33,7 @@ Lists recently submitted strings
 For sorting the documents descending on the date showing only the latest 10, use the following syntax: 
 `db.searches.find().sort({ when: -1 }).limit(10)`
 
+Invoking Bing's Image search using: https://api.cognitive.microsoft.com/bing/v5.0/images/search[?q][&count][&offset][&mkt][&safeSearch] - see: https://dev.cognitive.microsoft.com/docs/services/56b43f0ccf5ff8098cef3808/operations/56b4433fcf5ff8098cef380c
+e.g. https://api.cognitive.microsoft.com/bing/v5.0/images/search?q=grumpy cats&count=10&offset=0
+The API key should be sent as HTTP Header (Ocp-Apim-Subscription-Key)
+
